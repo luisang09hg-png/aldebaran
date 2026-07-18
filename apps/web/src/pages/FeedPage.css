@@ -1,0 +1,115 @@
+.feed-page-container {
+  min-height: calc(100vh - 64px); /* assuming navbar */
+  background-color: var(--color-base-dark);
+  background-image: radial-gradient(circle at center top, rgba(2, 12, 71, 0.4), var(--color-base-dark) 70%);
+  padding: 32px 0;
+  color: var(--color-white);
+}
+
+.feed-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 24px;
+}
+
+.card-glass {
+  background: rgba(2, 12, 71, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(32, 120, 207, 0.2);
+  border-radius: var(--radius-card);
+  padding: 24px;
+}
+
+.profile-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.avatar-placeholder-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary-dark));
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-glow);
+}
+
+.profile-summary h3 {
+  color: var(--color-white);
+  margin-bottom: 4px;
+  font-size: 1.2rem;
+}
+
+.profile-summary p {
+  color: rgba(245, 248, 252, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.profile-summary .stats {
+  width: 100%;
+  border-top: 1px solid rgba(245, 248, 252, 0.1);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats span {
+  font-size: 0.8rem;
+  color: rgba(245, 248, 252, 0.6);
+}
+
+.stats strong {
+  color: var(--color-white);
+  font-size: 1.1rem;
+}
+
+.recommendations h3 {
+  color: var(--color-white);
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(245, 248, 252, 0.1);
+}
+
+.recommendations ul {
+  list-style: none;
+}
+
+.recommendations li {
+  padding: 8px 0;
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  font-weight: 500;
+}
+
+.recommendations li:hover {
+  color: var(--color-bg-light);
+}
+
+@media (max-width: 1024px) {
+  .feed-layout {
+    grid-template-columns: 240px 1fr;
+  }
+  .feed-sidebar.right {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .feed-layout {
+    grid-template-columns: 1fr;
+  }
+  .feed-sidebar.left {
+    display: none;
+  }
+}

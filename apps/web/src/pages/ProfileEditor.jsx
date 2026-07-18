@@ -1,97 +1,137 @@
-import React, { useState } from 'react';
-import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
-import './ProfileEditor.css';
+/**
+ * ProfileEditor.jsx — Página principal de edición de perfil.
+ * Orquesta las secciones: Identidad, Correo empleo, Logros, Formación, Preferencias.
+ */
+import { useState } from 'react';
+import { useProfile } from '../hooks/useProfile';
+import ToastContainer, { useToast } from '../components/ui/Toast';
+import IdentityForm    from './profile/IdentityForm';
+import JobEmailSection from './profile/JobEmailSection';
+import AchievementsForm from './profile/AchievementsForm';
+import EducationForm   from './profile/EducationForm';
+import PreferencesForm from './profile/PreferencesForm';
+import './ProfileEdit.css';
 
-const ProfileEditor = ({ onNavigate }) => {
-  const [activeTab, setActiveTab] = useState('general');
+const NAV = [
+  { id: 'identity',     icon: '👤', label: 'Identidad' },
+  { id: 'jobEmail',     icon: '📧', label: 'Correo empleo' },
+  { id: 'education',    icon: '🎓', label: 'Formación' },
+  { id: 'achievements', icon: '🏆', label: 'Logros' },
+  { id: 'preferences',  icon: '⚙️', label: 'Preferencias' },
+];
+
+export default function ProfileEditor({ onNavigate }) {
+  const [activeTab, setActiveTab] = useState('identity');
+  const { toasts, toast } = useToast();
+  const {
+    profile, loading, error,
+    updateIdentity,
+    addAchievement, editAchievement, removeAchievement,
+    addEducation,   editEducation,   removeEducation,
+    savePreferences,
+  } = useProfile();
+
+  if (loading) return <div className="profile-loading">Cargando tu perfil…</div>;
+  if (error)   return <div className="profile-loading" style={{ color: '#dc2626' }}>Error: {error}</div>;
+
+  const sectionTitle = NAV.find((n) => n.id === activeTab);
 
   return (
-    <div className="profile-page">
-      <div className="container profile-container">
-        <aside className="profile-sidebar scroll-observe">
-          <Card>
-            <div className="profile-avatar-container">
-              {/* Using generated avatar image */}
-              <img src="/avatar-placeholder.png" alt="Tu Avatar" className="profile-avatar" />
-              <button className="edit-avatar-btn">✏️</button>
+    <div className="profile-edit-page">
+      <div className="container profile-edit-layout">
+
+        {/* ── Sidebar ─────────────────────────────────────────────────────── */}
+        <aside>
+          <div className="profile-sidebar-card">
+            <div className="profile-avatar-wrap">
+              <img
+                src={profile?.avatarUrl || `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(profile?.name || 'U')}`}
+                alt="Avatar"
+              />
             </div>
-            <h3 className="text-center mt-4">Tu Perfil</h3>
-            <p className="text-center text-muted mb-6">Completa tu perfil para destacar</p>
-            
-            <nav className="profile-nav">
-              <button 
-                className={`profile-nav-item ${activeTab === 'general' ? 'active' : ''}`}
-                onClick={() => setActiveTab('general')}
-              >
-                👤 Información General
-              </button>
-              <button 
-                className={`profile-nav-item ${activeTab === 'skills' ? 'active' : ''}`}
-                onClick={() => setActiveTab('skills')}
-              >
-                ✨ Habilidades
-              </button>
-              <button 
-                className={`profile-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
-                onClick={() => setActiveTab('projects')}
-              >
-                🚀 Proyectos
-              </button>
-              <button 
-                className={`profile-nav-item ${activeTab === 'preferences' ? 'active' : ''}`}
-                onClick={() => setActiveTab('preferences')}
-              >
-                ⚙️ Preferencias
-              </button>
+            <p className="sidebar-name">{profile?.name || 'Sin nombre'}</p>
+            <p className="sidebar-email">{profile?.contactEmail || '—'}</p>
+
+            <nav className="section-nav">
+              {NAV.map(({ id, icon, label }) => (
+                <button
+                  key={id}
+                  className={`section-nav-btn ${activeTab === id ? 'active' : ''}`}
+                  onClick={() => setActiveTab(id)}
+                >
+                  <span className="nav-icon">{icon}</span>
+                  {label}
+                </button>
+              ))}
             </nav>
-          </Card>
+
+            <div style={{ marginTop: 20 }}>
+              <button
+                className="section-nav-btn"
+                style={{ color: '#6b7280', width: '100%' }}
+                onClick={() => onNavigate('home')}
+              >
+                ← Volver al inicio
+              </button>
+            </div>
+          </div>
         </aside>
 
-        <main className="profile-content scroll-observe delay-100">
-          <div className="profile-header">
-            <h2>Personaliza tu perfil</h2>
-            <Button variant="outline" onClick={() => onNavigate('home')}>Volver al inicio</Button>
-          </div>
+        {/* ── Main content ─────────────────────────────────────────────────── */}
+        <main className="animate-slide-up">
+          <div className="profile-main-card">
+            <div className="section-header">
+              <span style={{ fontSize: '1.4rem' }}>{sectionTitle?.icon}</span>
+              <h2>{sectionTitle?.label}</h2>
+            </div>
 
-          <Card className="mt-8">
-            {activeTab === 'general' && (
-              <div className="animate-slide-up">
-                <h3>Información General</h3>
-                <p className="text-muted mb-6">Cuenta tu historia. A las empresas les importa más tu potencial que tu experiencia.</p>
-                
-                <form className="profile-form">
-                  <div className="form-group">
-                    <label>Nombre completo</label>
-                    <input type="text" placeholder="Ej. Ana Pérez" className="form-input" />
-                  </div>
-                  <div className="form-group">
-                    <label>Titular (Headline)</label>
-                    <input type="text" placeholder="Ej. Estudiante de diseño apasionada por UI/UX" className="form-input" />
-                  </div>
-                  <div className="form-group">
-                    <label>Sobre mí (Bio)</label>
-                    <textarea rows="4" placeholder="Cuéntanos qué te apasiona, qué estás aprendiendo..." className="form-input"></textarea>
-                  </div>
-                  
-                  <div className="form-actions">
-                    <Button type="button">Guardar cambios</Button>
-                  </div>
-                </form>
-              </div>
+            {activeTab === 'identity' && (
+              <IdentityForm
+                profile={profile}
+                onSave={updateIdentity}
+                toast={toast}
+              />
             )}
-            
-            {activeTab !== 'general' && (
-              <div className="animate-slide-up text-center py-12">
-                <h3>Sección en construcción</h3>
-                <p className="text-muted mt-4">Esta área del perfil estará disponible próximamente.</p>
-              </div>
+
+            {activeTab === 'jobEmail' && (
+              <JobEmailSection
+                profile={profile}
+                toast={toast}
+              />
             )}
-          </Card>
+
+            {activeTab === 'education' && (
+              <EducationForm
+                profile={profile}
+                onAdd={addEducation}
+                onEdit={editEducation}
+                onDelete={removeEducation}
+                toast={toast}
+              />
+            )}
+
+            {activeTab === 'achievements' && (
+              <AchievementsForm
+                profile={profile}
+                onAdd={addAchievement}
+                onEdit={editAchievement}
+                onDelete={removeAchievement}
+                toast={toast}
+              />
+            )}
+
+            {activeTab === 'preferences' && (
+              <PreferencesForm
+                profile={profile}
+                onSave={savePreferences}
+                toast={toast}
+              />
+            )}
+          </div>
         </main>
       </div>
+
+      <ToastContainer toasts={toasts} />
     </div>
   );
-};
-
-export default ProfileEditor;
+}

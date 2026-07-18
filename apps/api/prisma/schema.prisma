@@ -7,11 +7,183 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── Auth ────────────────────────────────────────────────────────────────────
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
   passwordHash String
   fullName     String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  profile      UserProfile?
+  sessions     Session[]
+  posts        Post[]
+  stories      Story[]
+  reactions    Reaction[]
+  jobs         Job[]
+  applications Application[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─── Perfil ───────────────────────────────────────────────────────────────────
+model UserProfile {
+  id               Int              @id @default(autoincrement())
+  userId           Int              @unique
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Identidad
+  name             String?
+  avatarUrl        String?
+  bio              String?
+  contactEmail     String?
+  // Correo de empleo (separado y verificable)
+  jobEmail         String?
+  jobEmailVerified Boolean          @default(false)
+  jobEmailToken    String?
+  jobEmailTokenExp DateTime?
+  // Skills (array serializado como JSON en SQLite)
+  skills           String           @default("[]")
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  // Relaciones
+  achievements     Achievement[]
+  educations       Education[]
+  preferences      UserPreferences?
+}
+
+// ─── Logros ───────────────────────────────────────────────────────────────────
+model Achievement {
+  id          Int      @id @default(autoincrement())
+  profileId   Int
+  profile     UserProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  /// "verified" | "unverified"
+  status      String   @default("unverified")
+  fileUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([profileId])
+}
+
+// ─── Formación ────────────────────────────────────────────────────────────────
+model Education {
+  id          Int         @id @default(autoincrement())
+  profileId   Int
+  profile     UserProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  institution String
+  degree      String
+  startDate   DateTime
+  endDate     DateTime?
+  /// "EN_CURSO" | "EGRESADO" | "TITULADO"
+  eduStatus   String      @default("EN_CURSO")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([profileId])
+}
+
+// ─── Preferencias UI ─────────────────────────────────────────────────────────
+model UserPreferences {
+  id          Int         @id @default(autoincrement())
+  profileId   Int         @unique
+  profile     UserProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  theme       String      @default("dark")
+  accentColor String      @default("#2078CF")
+  /// JSON array de strings — orden de secciones visibles
+  layoutOrder String      @default("[\"identity\",\"education\",\"achievements\"]")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+// ─── Feed (Posts & Stories) ──────────────────────────────────────────────────
+model Post {
+  id        Int      @id @default(autoincrement())
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  content   String
+  mediaUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reactions Reaction[]
+
+  @@index([authorId])
+}
+
+model Story {
+  id        Int      @id @default(autoincrement())
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  mediaUrl  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  reactions Reaction[]
+
+  @@index([authorId])
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    Int?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  storyId   Int?
+  story     Story?   @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  type      String   // e.g., "like", "clap"
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([postId])
+  @@index([storyId])
+}
+
+// ─── Jobs & Applications ─────────────────────────────────────────────────────
+model Job {
+  id          Int      @id @default(autoincrement())
+  authorId    Int
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  location    String?
+  salary      String?
+  requirements String? 
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  applications Application[]
+
+  @@index([authorId])
+}
+
+model Application {
+  id          Int      @id @default(autoincrement())
+  jobId       Int
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicantId Int
+  applicant   User     @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  status      String   @default("pending") // e.g., "pending", "reviewed", "accepted", "rejected"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  cvSubmission CvSubmission?
+
+  @@index([jobId])
+  @@index([applicantId])
+}
+
+model CvSubmission {
+  id            Int      @id @default(autoincrement())
+  applicationId Int      @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  cvUrl         String
+  createdAt     DateTime @default(now())
 }
