@@ -1,0 +1,238 @@
+.hero {
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-accent) 100%);
+  color: var(--color-white);
+  padding: 160px 0 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: 4rem;
+  line-height: 1.1;
+  color: var(--color-white);
+  margin-bottom: 24px;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-bottom: 40px;
+  max-width: 500px;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #fff, #a3cbf5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+}
+
+.hero-image-placeholder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: rgba(255,255,255,0.1);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+}
+
+.hero-badge {
+  position: absolute;
+  bottom: -20px;
+  left: -20px;
+  background: var(--color-white);
+  color: var(--color-primary-dark);
+  padding: 16px 24px;
+  border-radius: var(--radius-pill);
+  font-weight: bold;
+  box-shadow: var(--shadow-lg);
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 64px;
+}
+
+.how-it-works {
+  padding: 100px 0;
+  background-color: var(--color-bg-light);
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.step-card {
+  position: relative;
+  text-align: center;
+  padding-top: 48px;
+}
+
+.step-number {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: var(--shadow-glow);
+}
+
+.stats {
+  background-color: var(--color-primary-dark);
+  color: white;
+  padding: 64px 0;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  color: var(--color-accent);
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+.benefits {
+  padding: 100px 0;
+}
+
+.benefits-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.benefits h2 {
+  font-size: 2.5rem;
+  margin-bottom: 32px;
+}
+
+.benefits .text-gradient {
+  background: linear-gradient(90deg, var(--color-primary-light), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.benefits-list {
+  list-style: none;
+}
+
+.benefits-list li {
+  font-size: 1.125rem;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.check {
+  color: var(--color-accent);
+  font-weight: bold;
+}
+
+.benefits-visual {
+  background: var(--color-bg-light);
+  border-radius: 24px;
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-card {
+  position: absolute;
+  right: -20px;
+  bottom: 40px;
+  width: 300px;
+  border-left: 4px solid var(--color-accent);
+}
+
+.final-cta {
+  background-color: var(--color-base-dark);
+  color: white;
+  padding: 120px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.final-cta h2 {
+  color: white;
+  font-size: 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.bg-star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40vw;
+  color: rgba(255, 255, 255, 0.03);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.mt-8 { margin-top: 32px; }
+.ml-4 { margin-left: 16px; }
+
+@media (max-width: 992px) {
+  .hero-container, .benefits-container {
+    grid-template-columns: 1fr;
+  }
+  .steps-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2.5rem; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .stats-container { flex-direction: column; gap: 48px; }
+  .floating-card { right: 0; bottom: 0; position: relative; width: 100%; }
+}
