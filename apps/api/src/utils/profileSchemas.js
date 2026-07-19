@@ -42,6 +42,8 @@ const educationUpdateSchema = educationCreateSchema.partial();
 const preferencesSchema = z.object({
   theme:       z.enum(['light', 'dark']).optional(),
   accentColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+  fontFamily:  z.enum(['Inter', 'Poppins', 'Roboto', 'Outfit', 'Fira Code']).optional(),
+  layoutStyle: z.enum(['grid', 'list', 'magazine']).optional(),
   layoutOrder: z.array(z.string()).max(10).optional(),
 });
 

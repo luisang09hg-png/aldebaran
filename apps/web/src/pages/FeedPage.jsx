@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import PostComposer from '../components/feed/PostComposer';
 import PostCard from '../components/feed/PostCard';
 import { api } from '../lib/api';
+import StoryBar from '../components/stories/StoryBar';
+import StoryViewer from '../components/stories/StoryViewer';
+import StoryComposer from '../components/stories/StoryComposer';
 import './FeedPage.css';
 
 const FeedPage = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  const [showStoryComposer, setShowStoryComposer] = useState(false);
+  const [viewingStories, setViewingStories] = useState(null);
+  const [storyRefreshTrigger, setStoryRefreshTrigger] = useState(0);
 
   const fetchPosts = async () => {
     try {
@@ -90,6 +97,11 @@ const FeedPage = () => {
         </aside>
         
         <main className="feed-main">
+          <StoryBar 
+            refreshTrigger={storyRefreshTrigger}
+            onOpenComposer={() => setShowStoryComposer(true)}
+            onSelectGroup={(data) => setViewingStories(data)}
+          />
           <PostComposer onPostCreate={handleCreatePost} />
           
           {error && <div className="error-message-feed">{error}</div>}
@@ -120,6 +132,21 @@ const FeedPage = () => {
           </div>
         </aside>
       </div>
+      
+      {showStoryComposer && (
+        <StoryComposer 
+          onClose={() => setShowStoryComposer(false)}
+          onCreated={() => setStoryRefreshTrigger(t => t + 1)}
+        />
+      )}
+      
+      {viewingStories && (
+        <StoryViewer 
+          storyGroups={viewingStories.storyGroups}
+          initialGroupIndex={viewingStories.initialGroupIndex}
+          onClose={() => setViewingStories(null)}
+        />
+      )}
     </div>
   );
 };

@@ -7,6 +7,8 @@ const postsRoutes = require('./routes/posts.routes');
 const jobRoutes = require('./routes/job.routes');
 const applicationRoutes = require('./routes/application.routes');
 const courseRoutes = require('./routes/course.routes');
+const storyRoutes = require('./routes/story.routes');
+const { startStoryCleanupJob } = require('./jobs/cleanupStories.job');
 
 const app = express();
 const requestedPort = Number(process.env.PORT) || 3000;
@@ -27,6 +29,7 @@ app.use('/api/posts', postsRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/stories', storyRoutes);
 
 // ── 404 handler ───────────────────────────────────────────────────────────────
 app.use((_req, res) => res.status(404).json({ error: 'Ruta no encontrada.' }));
@@ -46,4 +49,5 @@ const startServer = (port) => {
   });
 };
 
+startStoryCleanupJob();
 startServer(requestedPort);

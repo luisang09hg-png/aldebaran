@@ -127,6 +127,7 @@ model Story {
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   mediaUrl  String
+  caption   String?
   expiresAt DateTime
   createdAt DateTime @default(now())
   reactions Reaction[]

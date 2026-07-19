@@ -7,6 +7,7 @@ import JobBoard from './pages/JobBoard';
 import ApplicationsDashboard from './pages/ApplicationsDashboard';
 import AuthPage from './pages/AuthPage';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { useAuth } from './hooks/useAuth';
 import './index.css';
 
@@ -41,9 +42,12 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
     </AuthProvider>
   );
 }
 
 export default App;
+
