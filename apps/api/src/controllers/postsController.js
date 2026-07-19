@@ -13,7 +13,8 @@ const postsController = {
       const post = await postsService.createPost({
         authorId,
         content: validatedData.content,
-        mediaUrl
+        mediaUrl,
+        achievementId: validatedData.achievementId
       });
 
       res.status(201).json({ success: true, data: post });

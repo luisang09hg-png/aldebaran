@@ -3,6 +3,8 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import LandingPage from './pages/LandingPage';
 import ProfileEditor from './pages/ProfileEditor';
+import JobBoard from './pages/JobBoard';
+import ApplicationsDashboard from './pages/ApplicationsDashboard';
 import AuthPage from './pages/AuthPage';
 import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './hooks/useAuth';
@@ -27,11 +29,10 @@ function AppContent() {
   return (
     <>
       <Navbar onNavigate={setCurrentPage} />
-      {currentPage === 'home' ? (
-        <LandingPage onNavigate={setCurrentPage} />
-      ) : (
-        <ProfileEditor onNavigate={setCurrentPage} />
-      )}
+      {currentPage === 'home' && <LandingPage onNavigate={setCurrentPage} />}
+      {currentPage === 'profile' && <ProfileEditor onNavigate={setCurrentPage} />}
+      {currentPage === 'jobs' && <JobBoard onNavigate={setCurrentPage} />}
+      {currentPage === 'applications' && <ApplicationsDashboard onNavigate={setCurrentPage} />}
       <Footer />
     </>
   );

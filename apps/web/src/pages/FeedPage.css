@@ -113,3 +113,20 @@
     display: none;
   }
 }
+
+.loading-feed, .empty-feed, .error-message-feed {
+  text-align: center;
+  padding: 40px;
+  background: rgba(2, 12, 71, 0.3);
+  border: 1px solid rgba(32, 120, 207, 0.2);
+  border-radius: var(--radius-card);
+  color: rgba(245, 248, 252, 0.7);
+  font-family: var(--font-heading);
+}
+
+.error-message-feed {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #EF4444;
+  margin-bottom: 24px;
+}
+

@@ -4,6 +4,9 @@ const cors    = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const profileRoutes = require('./routes/profile.routes');
 const postsRoutes = require('./routes/posts.routes');
+const jobRoutes = require('./routes/job.routes');
+const applicationRoutes = require('./routes/application.routes');
+const courseRoutes = require('./routes/course.routes');
 
 const app = express();
 const requestedPort = Number(process.env.PORT) || 3000;
@@ -21,6 +24,9 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/posts', postsRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/courses', courseRoutes);
 
 // ── 404 handler ───────────────────────────────────────────────────────────────
 app.use((_req, res) => res.status(404).json({ error: 'Ruta no encontrada.' }));

@@ -1,9 +1,9 @@
-const { prisma } = require('../repositories/prisma');
+const prisma = require('../config/prisma');
 
 const requireApplicationOwnership = async (req, res, next) => {
   try {
     const applicationId = parseInt(req.params.id, 10);
-    const userId = req.user.id; // Asumiendo que auth middleware inyecta req.user
+    const userId = req.userId;
 
     if (isNaN(applicationId)) {
       return res.status(400).json({ error: 'ID de postulación inválido' });

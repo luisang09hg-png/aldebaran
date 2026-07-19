@@ -99,6 +99,8 @@ model UserPreferences {
   profile     UserProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   theme       String      @default("dark")
   accentColor String      @default("#2078CF")
+  fontFamily  String      @default("Inter")
+  layoutStyle String      @default("grid")
   /// JSON array de strings — orden de secciones visibles
   layoutOrder String      @default("[\"identity\",\"education\",\"achievements\"]")
   createdAt   DateTime    @default(now())
@@ -107,14 +109,15 @@ model UserPreferences {
 
 // ─── Feed (Posts & Stories) ──────────────────────────────────────────────────
 model Post {
-  id        Int      @id @default(autoincrement())
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  content   String
-  mediaUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  reactions Reaction[]
+  id            Int      @id @default(autoincrement())
+  authorId      Int
+  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  content       String
+  mediaUrl      String?
+  achievementId Int?     // Opcional: vínculo a un logro específico
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  reactions     Reaction[]
 
   @@index([authorId])
 }
@@ -145,6 +148,22 @@ model Reaction {
   @@index([userId])
   @@index([postId])
   @@index([storyId])
+}
+
+// ─── Cursos ──────────────────────────────────────────────────────────────────
+model Course {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  provider    String?
+  url         String?
+  thumbnailUrl String?
+  category    String?
+  // Skills en formato string serializado (JSON array)
+  skills      String   @default("[]")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 // ─── Jobs & Applications ─────────────────────────────────────────────────────

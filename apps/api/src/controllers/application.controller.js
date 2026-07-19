@@ -23,7 +23,7 @@ const updateStatus = async (req, res, next) => {
 
 const getMyApplications = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = req.userId;
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 10;
 
@@ -39,8 +39,20 @@ const getApplicationDetails = async (req, res) => {
   res.json({ data: req.application });
 };
 
+const createApplication = async (req, res, next) => {
+  try {
+    const { jobId } = req.body;
+    const applicantId = req.userId;
+    const application = await applicationService.createApplication(applicantId, jobId);
+    res.status(201).json({ data: application });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   updateStatus,
   getMyApplications,
-  getApplicationDetails
+  getApplicationDetails,
+  createApplication
 };

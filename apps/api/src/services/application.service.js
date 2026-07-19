@@ -1,4 +1,4 @@
-const { prisma } = require('../repositories/prisma');
+const prisma = require('../config/prisma');
 
 const ALLOWED_STATUSES = ['SUBMITTED', 'IN_REVIEW', 'INTERVIEW', 'REJECTED', 'ACCEPTED'];
 
@@ -29,6 +29,25 @@ class ApplicationService {
     ]);
 
     return { applications, total, page, limit };
+  }
+  async createApplication(applicantId, jobId) {
+    return await prisma.application.create({
+      data: {
+        applicantId,
+        jobId,
+        status: 'SUBMITTED'
+      }
+    });
+  }
+
+  async getApplicationById(id) {
+    return await prisma.application.findUnique({
+      where: { id: parseInt(id, 10) },
+      include: {
+        job: true,
+        cvSubmission: true
+      }
+    });
   }
 }
 
