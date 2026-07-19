@@ -1,0 +1,42 @@
+.messages-page { display: flex; flex-direction: column; gap: 16px; }
+.messages-shell { display: grid; grid-template-columns: 280px 1fr 270px; gap: 16px; }
+.messages-list-panel, .thread-panel, .job-side-panel { min-height: 0; }
+.messages-list-panel { background: var(--color-white); border-radius: 20px; padding: 16px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 10px; }
+.messages-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.messages-list-header h4 { margin: 0; color: var(--color-primary-dark); }
+.messages-list-header span { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 999px; background: var(--color-accent); color: var(--color-white); font-size: 0.8rem; }
+.conversation-item { display: flex; align-items: center; gap: 10px; width: 100%; border: none; background: transparent; padding: 10px; border-radius: 12px; cursor: pointer; text-align: left; }
+.conversation-item.active { background: rgba(32,120,207,0.12); }
+.conversation-avatar { width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--color-accent), var(--color-primary-dark)); color: var(--color-white); font-weight: 700; }
+.conversation-body { flex: 1; min-width: 0; }
+.conversation-topline { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.conversation-topline strong { color: var(--color-primary-dark); font-size: 0.92rem; }
+.conversation-topline span { color: #6b7280; font-size: 0.72rem; }
+.conversation-body p { margin: 4px 0 0; font-size: 0.8rem; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.unread-pill { display: inline-flex; align-items: center; justify-content: center; height: 22px; min-width: 22px; padding: 0 7px; border-radius: 999px; background: var(--color-accent); color: var(--color-white); font-size: 0.72rem; }
+.thread-card { padding: 20px; display: flex; flex-direction: column; gap: 16px; min-height: 540px; }
+.thread-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.thread-header h4 { margin: 0; color: var(--color-primary-dark); }
+.thread-header p { margin: 4px 0 0; color: #6b7280; }
+.thread-messages { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.message-bubble { max-width: 70%; padding: 10px 12px; border-radius: 14px; line-height: 1.5; }
+.message-bubble.mine { align-self: flex-end; background: var(--color-accent); color: var(--color-white); }
+.message-bubble.theirs { align-self: flex-start; background: rgba(2,12,71,0.08); color: var(--color-text-dark); }
+.message-composer { display: flex; gap: 10px; }
+.message-composer input { flex: 1; padding: 10px 12px; border: 1px solid rgba(2,12,71,0.1); border-radius: 999px; }
+.job-side-card { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.job-side-card h4 { margin: 0; color: var(--color-primary-dark); }
+.job-label { color: var(--color-accent); font-weight: 600; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,5,33,0.58); display: flex; align-items: center; justify-content: center; padding: 24px; z-index: 1000; }
+.modal-card { width: min(560px, 100%); background: var(--color-white); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-lg); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.modal-header h4 { margin: 0; color: var(--color-primary-dark); }
+.modal-header button { border: none; background: transparent; font-size: 1.2rem; cursor: pointer; }
+.calendar-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
+.calendar-day { text-align: center; color: #6b7280; font-size: 0.82rem; }
+.calendar-date { border: 1px solid rgba(2,12,71,0.08); border-radius: 10px; padding: 10px; background: rgba(2,12,71,0.04); cursor: pointer; }
+.time-slot-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 16px; }
+.time-slot { border: 1px solid rgba(2,12,71,0.08); border-radius: 999px; padding: 8px 12px; background: var(--color-white); cursor: pointer; }
+.time-slot.active { background: var(--color-accent); color: var(--color-white); border-color: var(--color-accent); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+@media (max-width: 1080px) { .messages-shell { grid-template-columns: 1fr; } }

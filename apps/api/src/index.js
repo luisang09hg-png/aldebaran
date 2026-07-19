@@ -8,6 +8,7 @@ const jobRoutes = require('./routes/job.routes');
 const applicationRoutes = require('./routes/application.routes');
 const courseRoutes = require('./routes/course.routes');
 const storyRoutes = require('./routes/story.routes');
+const messagingRoutes = require('./routes/messaging.routes');
 const { startStoryCleanupJob } = require('./jobs/cleanupStories.job');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/stories', storyRoutes);
+app.use('/api/messaging', messagingRoutes);
 
 // ── 404 handler ───────────────────────────────────────────────────────────────
 app.use((_req, res) => res.status(404).json({ error: 'Ruta no encontrada.' }));

@@ -22,6 +22,8 @@ model User {
   reactions    Reaction[]
   jobs         Job[]
   applications Application[]
+  conversations Conversation[]
+  interviews   Interview[]
 }
 
 model Session {
@@ -181,6 +183,7 @@ model Job {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   applications Application[]
+  interviews  Interview[]
 
   @@index([authorId])
 }
@@ -206,4 +209,35 @@ model CvSubmission {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   cvUrl         String
   createdAt     DateTime @default(now())
+}
+
+model Conversation {
+  id               Int       @id @default(autoincrement())
+  userId           Int
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participantName  String
+  lastMessage      String?
+  updatedAt        DateTime  @default(now())
+  messages         Message[]
+}
+
+model Message {
+  id              Int          @id @default(autoincrement())
+  conversationId  Int
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId        Int
+  text            String
+  createdAt       DateTime     @default(now())
+}
+
+model Interview {
+  id               Int       @id @default(autoincrement())
+  userId           Int
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId            Int?
+  job              Job?      @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  participantName  String
+  status           String    @default("scheduled")
+  scheduledAt      DateTime?
+  createdAt        DateTime  @default(now())
 }

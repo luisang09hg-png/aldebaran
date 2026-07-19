@@ -13,15 +13,19 @@ import PreferencesForm from './profile/PreferencesForm';
 import './ProfileEdit.css';
 
 const NAV = [
-  { id: 'identity',     icon: '👤', label: 'Identidad' },
-  { id: 'jobEmail',     icon: '📧', label: 'Correo empleo' },
-  { id: 'education',    icon: '🎓', label: 'Formación' },
-  { id: 'achievements', icon: '🏆', label: 'Logros' },
-  { id: 'preferences',  icon: '⚙️', label: 'Preferencias' },
+  { id: 'identity',     icon: '👤', label: 'Información' },
+  { id: 'experience',   icon: '💼', label: 'Experiencia' },
+  { id: 'skills',       icon: '🛠️', label: 'Habilidades' },
+  { id: 'projects',     icon: '📁', label: 'Proyectos' },
+  { id: 'interests',    icon: '✨', label: 'Intereses' },
+  { id: 'settings',     icon: '⚙️', label: 'Ajustes' },
 ];
 
 export default function ProfileEditor({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('identity');
+  const [bannerPreset, setBannerPreset] = useState('preset');
+  const [bannerColor, setBannerColor] = useState('var(--color-accent)');
+  const [bannerImage, setBannerImage] = useState('');
   const { toasts, toast } = useToast();
   const {
     profile, loading, error,
@@ -69,7 +73,7 @@ export default function ProfileEditor({ onNavigate }) {
               <button
                 className="section-nav-btn"
                 style={{ color: '#6b7280', width: '100%' }}
-                onClick={() => onNavigate('home')}
+                onClick={() => onNavigate && onNavigate('dashboard')}
               >
                 ← Volver al inicio
               </button>
@@ -127,8 +131,95 @@ export default function ProfileEditor({ onNavigate }) {
                 toast={toast}
               />
             )}
+
+            {activeTab === 'experience' && (
+              <div className="pf-form">
+                <div className="pf-field">
+                  <label>Experiencia reciente</label>
+                  <textarea className="pf-textarea" defaultValue="Diseñador junior con enfoque en onboarding digital y UX para productos educativos." />
+                </div>
+                <div className="pf-field">
+                  <label>Logros destacados</label>
+                  <textarea className="pf-textarea" defaultValue="Participé en 3 proyectos de prototipado guiados por investigación y testing." />
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'skills' && (
+              <div className="pf-form">
+                <div className="pf-field">
+                  <label>Habilidades clave</label>
+                  <div className="tag-list">
+                    {(profile?.skills || ['Diseño', 'React', 'Content']).map((skill) => (
+                      <span className="tag" key={skill}>{skill}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'projects' && (
+              <div className="pf-form">
+                <div className="pf-field">
+                  <label>Proyectos</label>
+                  <textarea className="pf-textarea" defaultValue="Portal de mentorías para jóvenes, landing page con diseño accesible y microinteracciones." />
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'interests' && (
+              <div className="pf-form">
+                <div className="pf-field">
+                  <label>Intereses</label>
+                  <div className="tag-list">
+                    {['Startups', 'UX', 'Tecnología', 'Aprendizaje'].map((interest) => (
+                      <span className="tag" key={interest}>{interest}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'settings' && (
+              <div className="pf-form">
+                <div className="pf-field">
+                  <label>Personalizar banner</label>
+                  <select className="pf-select" value={bannerPreset} onChange={(e) => setBannerPreset(e.target.value)}>
+                    <option value="preset">Preset</option>
+                    <option value="image">Cargar imagen</option>
+                    <option value="color">Color</option>
+                  </select>
+                </div>
+                {bannerPreset === 'image' && (
+                  <div className="pf-field">
+                    <label>URL de la imagen</label>
+                    <input className="pf-input" value={bannerImage} onChange={(e) => setBannerImage(e.target.value)} placeholder="https://..." />
+                  </div>
+                )}
+                {bannerPreset === 'color' && (
+                  <div className="pf-field">
+                    <label>Color del banner</label>
+                    <input className="pf-input" type="color" value={bannerColor} onChange={(e) => setBannerColor(e.target.value)} />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </main>
+
+        <aside className="profile-preview-panel">
+          <div className="profile-preview-card">
+            <div className="profile-preview-banner" style={{ background: bannerPreset === 'color' ? bannerColor : bannerPreset === 'image' && bannerImage ? `url(${bannerImage}) center/cover` : 'linear-gradient(135deg, var(--color-accent), var(--color-primary-dark))' }} />
+            <div className="profile-preview-body">
+              <div className="profile-preview-avatar">{(profile?.name || 'S').charAt(0)}</div>
+              <h3>{profile?.name || 'Sofía Torres'}</h3>
+              <p>{profile?.bio || 'Diseñadora digital en crecimiento'}</p>
+              <div className="tag-list">
+                {(profile?.skills || ['Diseño', 'UX']).slice(0, 3).map((skill) => <span className="tag" key={skill}>{skill}</span>)}
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
 
       <ToastContainer toasts={toasts} />

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 import Button from '../ui/Button';
 import './Navbar.css';
 
 const Navbar = ({ onNavigate }) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +15,10 @@ const Navbar = ({ onNavigate }) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  if (user) {
+    return null;
+  }
 
   return (
     <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
@@ -32,7 +38,7 @@ const Navbar = ({ onNavigate }) => {
           <a href="#companies" onClick={() => setMenuOpen(false)}>Para empresas</a>
           
           <div className="navbar-actions">
-            <Button variant="outline" size="sm">Iniciar sesión</Button>
+            <Button variant="outline" size="sm" onClick={() => onNavigate && onNavigate('auth')}>Iniciar sesión</Button>
             <Button variant="primary" size="sm" onClick={() => onNavigate && onNavigate('profile')}>
               Crear mi perfil
             </Button>
