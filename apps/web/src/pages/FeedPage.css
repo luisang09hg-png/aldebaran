@@ -14,8 +14,8 @@
 
 .card-glass {
   background: rgba(2, 12, 71, 0.4);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(32, 120, 207, 0.2);
   border-radius: var(--radius-card);
   padding: 24px;

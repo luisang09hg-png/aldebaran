@@ -27,8 +27,8 @@ const LandingPage = ({ onNavigate }) => {
             <h1>Tu primer trabajo <br/><span className="text-gradient">puede cambiarlo todo</span></h1>
             <p className="hero-subtitle">Descubre oportunidades diseñadas para jóvenes sin experiencia. Aldebaran es tu plataforma social para iniciar tu carrera profesional.</p>
             <div className="hero-cta">
-              <Button size="lg" onClick={() => onNavigate('profile')}>Crear mi perfil</Button>
-              <Button size="lg" variant="outline" className="ml-4">Explorar vacantes</Button>
+              <Button size="lg" onClick={() => onNavigate && onNavigate('auth')}>Iniciar sesión</Button>
+              <Button size="lg" variant="outline" className="ml-4" onClick={() => onNavigate && onNavigate('profile')}>Crear mi perfil</Button>
             </div>
           </div>
           <div className="hero-image-wrapper scroll-observe delay-200">
@@ -99,7 +99,7 @@ const LandingPage = ({ onNavigate }) => {
                 <strong>Comunidad:</strong> Conecta con otros jóvenes y comparte consejos.
               </li>
             </ul>
-            <Button className="mt-8" onClick={() => onNavigate('profile')}>Personalizar mi perfil ahora</Button>
+            <Button className="mt-8" onClick={() => onNavigate && onNavigate('profile')}>Personalizar mi perfil ahora</Button>
           </div>
           <div className="benefits-visual scroll-observe delay-200">
              <Card className="floating-card" hoverable>
@@ -114,7 +114,7 @@ const LandingPage = ({ onNavigate }) => {
       <section className="final-cta scroll-observe">
         <div className="container text-center">
           <h2>¿Listo para dar el primer paso?</h2>
-          <Button size="lg" onClick={() => onNavigate('profile')} className="mt-8">Crear mi perfil gratis</Button>
+          <Button size="lg" onClick={() => onNavigate && onNavigate('profile')} className="mt-8">Crear mi perfil gratis</Button>
         </div>
         <div className="bg-star">★</div>
       </section>

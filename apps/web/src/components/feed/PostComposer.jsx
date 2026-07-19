@@ -59,7 +59,7 @@ const PostComposer = ({ onPostCreate }) => {
   };
 
   return (
-    <div className="post-composer card-glass animate-slide-up">
+    <form className="post-composer card-glass animate-slide-up" onSubmit={handleSubmit}>
       <div className="composer-header">
         <div className="avatar-placeholder"></div>
         <textarea
@@ -124,14 +124,14 @@ const PostComposer = ({ onPostCreate }) => {
         </div>
         
         <button 
+          type="submit"
           className="post-btn btn-primary" 
-          onClick={handleSubmit}
           disabled={!content.trim() && !media && !selectedAchievementId}
         >
           Publicar
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
