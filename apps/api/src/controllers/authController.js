@@ -5,12 +5,15 @@ const authController = {
   async register(req, res, next) {
     try {
       const validatedData = registerSchema.parse(req.body);
-      const user = await authService.register(validatedData);
+      const { user, token } = await authService.register(validatedData);
       
       const { passwordHash, ...userWithoutPassword } = user;
       res.status(201).json({
         success: true,
-        data: userWithoutPassword
+        data: {
+          user: userWithoutPassword,
+          token
+        }
       });
     } catch (error) {
       if (error.name === 'ZodError') {

@@ -5,16 +5,30 @@ const path = require('path');
 const fs = require('fs').promises;
 const crypto = require('crypto');
 
-// Multer in-memory storage to process images with sharp
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB
+    fileSize: MAX_FILE_SIZE_BYTES
+  },
+  fileFilter: (_req, file, cb) => {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/zip'];
+    const extension = path.extname(file.originalname).toLowerCase();
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.zip'];
+
+    if (allowedMimeTypes.includes(file.mimetype) || allowedExtensions.includes(extension)) {
+      cb(null, true);
+      return;
+    }
+
+    cb(new Error('Tipo de archivo no permitido.'));
   }
 });
 
 const uploadMiddleware = upload.single('media');
+uploadMiddleware.single = (fieldName) => upload.single(fieldName);
 
 const ensureUploadsDir = async () => {
   const uploadsDir = path.join(process.cwd(), 'uploads');
@@ -26,8 +40,18 @@ const ensureUploadsDir = async () => {
   return uploadsDir;
 };
 
+const sanitizeFilename = (originalname) => {
+  const ext = path.extname(originalname).toLowerCase();
+  const basename = path.basename(originalname, ext).replace(/[^a-zA-Z0-9._-]/g, '_');
+  return `${crypto.randomBytes(8).toString('hex')}-${basename}${ext}`;
+};
+
 const processMedia = async (file) => {
   if (!file) return null;
+
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    throw new Error('El archivo supera el límite de 10MB.');
+  }
 
   const uploadsDir = await ensureUploadsDir();
   const fileExtension = path.extname(file.originalname).toLowerCase();
@@ -87,7 +111,7 @@ const processMedia = async (file) => {
   }
 
   // Other files (like videos, handled simply without sharp)
-  const filename = `${crypto.randomBytes(16).toString('hex')}${fileExtension}`;
+  const filename = sanitizeFilename(file.originalname);
   const finalPath = path.join(uploadsDir, filename);
   await fs.writeFile(finalPath, file.buffer);
   

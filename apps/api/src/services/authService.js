@@ -33,7 +33,19 @@ const authService = {
       }
     });
 
-    return user;
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await prisma.session.create({
+      data: {
+        id: token,
+        userId: user.id,
+        expiresAt
+      }
+    });
+
+    return { user, token };
   },
 
   async login({ email, password }) {

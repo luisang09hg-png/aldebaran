@@ -34,6 +34,8 @@ const AuthenticatedShell = ({ currentPage, onNavigate, children }) => {
               key={item.key}
               className={`shell-nav-item ${currentPage === item.key ? 'active' : ''}`}
               onClick={() => onNavigate(item.key)}
+              aria-current={currentPage === item.key ? 'page' : undefined}
+              type="button"
             >
               <span className="nav-icon">{item.icon}</span>
               <span>{item.label}</span>

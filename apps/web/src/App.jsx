@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import AuthenticatedShell from './components/layout/AuthenticatedShell';
@@ -12,68 +13,86 @@ import FeedPage from './pages/FeedPage';
 import SkillsCenter from './components/SkillsCenter';
 import MessagesPage from './pages/MessagesPage';
 import VideoCallMock from './pages/VideoCallMock';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { useAuth } from './hooks/useAuth';
 import './index.css';
 
-function AppContent() {
-  const [currentPage, setCurrentPage] = useState('home');
-  const { user, loading } = useAuth();
-
-  useEffect(() => {
-    const handler = (event) => setCurrentPage(event.detail);
-    window.addEventListener('navigate', handler);
-    return () => window.removeEventListener('navigate', handler);
-  }, []);
-
-  const handleNavigate = (nextPage) => {
-    if (!user && nextPage !== 'home' && nextPage !== 'auth') {
-      setCurrentPage('auth');
-      return;
-    }
-    setCurrentPage(nextPage);
-  };
-
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: 'var(--color-base-dark)', color: 'var(--color-white)' }}>
-        Loading...
-      </div>
-    );
+const pageToPath = (page) => {
+  switch (page) {
+    case 'dashboard':
+    case 'home':
+      return '/dashboard';
+    case 'jobs':
+      return '/jobs';
+    case 'applications':
+      return '/applications';
+    case 'feed':
+      return '/feed';
+    case 'resources':
+      return '/resources';
+    case 'messages':
+      return '/messages';
+    case 'profile':
+      return '/profile';
+    case 'auth':
+      return '/login';
+    case 'video':
+      return '/video';
+    default:
+      return '/';
   }
+};
 
-  if (!user) {
-    if (currentPage === 'auth') {
-      return <AuthPage />;
-    }
-
-    return (
-      <>
-        <Navbar onNavigate={handleNavigate} />
-        {currentPage === 'home' && <LandingPage onNavigate={handleNavigate} />}
-        {currentPage === 'profile' && <ProfileEditor onNavigate={handleNavigate} />}
-        <Footer />
-      </>
-    );
-  }
-
-  const pageContent = {
-    dashboard: <Dashboard />,
-    home: <Dashboard />,
-    profile: <ProfileEditor onNavigate={handleNavigate} />,
-    jobs: <JobBoard onNavigate={handleNavigate} />,
-    applications: <ApplicationsDashboard onNavigate={handleNavigate} />,
-    feed: <FeedPage />,
-    resources: <SkillsCenter />,
-    messages: <MessagesPage onNavigate={handleNavigate} />,
-    video: <VideoCallMock />,
-  }[currentPage] || <Dashboard />;
+function PublicLayout() {
+  const navigate = useNavigate();
+  const handleNavigate = (page) => navigate(pageToPath(page));
 
   return (
-    <AuthenticatedShell currentPage={currentPage} onNavigate={handleNavigate}>
-      {pageContent}
-    </AuthenticatedShell>
+    <>
+      <Navbar onNavigate={handleNavigate} />
+      <Routes>
+        <Route path="/" element={<LandingPage onNavigate={handleNavigate} />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/profile" element={<ProfileEditor onNavigate={handleNavigate} />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Footer />
+    </>
+  );
+}
+
+function AppContent() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handler = (event) => {
+      if (event.detail) {
+        navigate(pageToPath(event.detail));
+      }
+    };
+
+    window.addEventListener('navigate', handler);
+    return () => window.removeEventListener('navigate', handler);
+  }, [navigate]);
+
+  const handleNavigate = (page) => navigate(pageToPath(page));
+
+  return (
+    <Routes>
+      <Route path="/login" element={<AuthPage />} />
+      <Route path="/" element={<PublicLayout />} />
+      <Route path="/dashboard" element={<ProtectedRoute><AuthenticatedShell currentPage="dashboard" onNavigate={handleNavigate}><Dashboard /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="/jobs" element={<ProtectedRoute><AuthenticatedShell currentPage="jobs" onNavigate={handleNavigate}><JobBoard onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="/jobs/:id" element={<ProtectedRoute><AuthenticatedShell currentPage="jobs" onNavigate={handleNavigate}><JobBoard onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="/applications" element={<ProtectedRoute><AuthenticatedShell currentPage="applications" onNavigate={handleNavigate}><ApplicationsDashboard onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="/feed" element={<ProtectedRoute><AuthenticatedShell currentPage="feed" onNavigate={handleNavigate}><FeedPage /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="/resources" element={<ProtectedRoute><AuthenticatedShell currentPage="resources" onNavigate={handleNavigate}><SkillsCenter /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="/messages" element={<ProtectedRoute><AuthenticatedShell currentPage="messages" onNavigate={handleNavigate}><MessagesPage onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><AuthenticatedShell currentPage="profile" onNavigate={handleNavigate}><ProfileEditor onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="/video" element={<ProtectedRoute><AuthenticatedShell currentPage="video" onNavigate={handleNavigate}><VideoCallMock /></AuthenticatedShell></ProtectedRoute>} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
@@ -81,7 +100,9 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <AppContent />
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
       </ThemeProvider>
     </AuthProvider>
   );
