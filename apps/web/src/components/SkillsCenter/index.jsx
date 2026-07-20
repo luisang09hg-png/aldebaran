@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CourseFilters } from './CourseFilters';
 import { CourseCard } from './CourseCard';
+import { api } from '../../lib/api';
 import './index.css';
 
 export const SkillsCenter = () => {
@@ -9,10 +10,7 @@ export const SkillsCenter = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulamos que obtenemos los recomendados o todos según la categoría, o usamos un endpoint real
-    // Reemplaza esta URL con tu variable de entorno ej. import.meta.env.VITE_API_URL
-    fetch('http://localhost:3000/api/courses')
-      .then(res => res.json())
+    api.get('/api/courses')
       .then(data => {
         setCourses(data.courses || []);
         setLoading(false);
@@ -22,6 +20,7 @@ export const SkillsCenter = () => {
         setLoading(false);
       });
   }, []);
+
 
   const filteredCourses = activeCategory === 'Todos' 
     ? courses 

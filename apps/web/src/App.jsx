@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import AuthenticatedShell from './components/layout/AuthenticatedShell';
@@ -64,6 +66,7 @@ function PublicLayout() {
 
 function AppContent() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handler = (event) => {
@@ -78,23 +81,112 @@ function AppContent() {
 
   const handleNavigate = (page) => navigate(pageToPath(page));
 
+  const pageVariants = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: 'easeIn' } }
+  };
+
   return (
-    <Routes>
-      <Route path="/login" element={<AuthPage />} />
-      <Route path="/" element={<PublicLayout />} />
-      <Route path="/dashboard" element={<ProtectedRoute><AuthenticatedShell currentPage="dashboard" onNavigate={handleNavigate}><Dashboard /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="/jobs" element={<ProtectedRoute><AuthenticatedShell currentPage="jobs" onNavigate={handleNavigate}><JobBoard onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="/jobs/:id" element={<ProtectedRoute><AuthenticatedShell currentPage="jobs" onNavigate={handleNavigate}><JobBoard onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="/applications" element={<ProtectedRoute><AuthenticatedShell currentPage="applications" onNavigate={handleNavigate}><ApplicationsDashboard onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="/feed" element={<ProtectedRoute><AuthenticatedShell currentPage="feed" onNavigate={handleNavigate}><FeedPage /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="/resources" element={<ProtectedRoute><AuthenticatedShell currentPage="resources" onNavigate={handleNavigate}><SkillsCenter /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="/messages" element={<ProtectedRoute><AuthenticatedShell currentPage="messages" onNavigate={handleNavigate}><MessagesPage onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><AuthenticatedShell currentPage="profile" onNavigate={handleNavigate}><ProfileEditor onNavigate={handleNavigate} /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="/video" element={<ProtectedRoute><AuthenticatedShell currentPage="video" onNavigate={handleNavigate}><VideoCallMock /></AuthenticatedShell></ProtectedRoute>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/login" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <AuthPage />
+          </motion.div>
+        } />
+        <Route path="/" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <PublicLayout />
+          </motion.div>
+        } />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="dashboard" onNavigate={handleNavigate}>
+                <Dashboard />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/jobs" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="jobs" onNavigate={handleNavigate}>
+                <JobBoard onNavigate={handleNavigate} />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/jobs/:id" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="jobs" onNavigate={handleNavigate}>
+                <JobBoard onNavigate={handleNavigate} />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/applications" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="applications" onNavigate={handleNavigate}>
+                <ApplicationsDashboard onNavigate={handleNavigate} />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/feed" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="feed" onNavigate={handleNavigate}>
+                <FeedPage />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/resources" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="resources" onNavigate={handleNavigate}>
+                <SkillsCenter />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/messages" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="messages" onNavigate={handleNavigate}>
+                <MessagesPage onNavigate={handleNavigate} />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="profile" onNavigate={handleNavigate}>
+                <ProfileEditor onNavigate={handleNavigate} />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/video" element={
+          <ProtectedRoute>
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <AuthenticatedShell currentPage="video" onNavigate={handleNavigate}>
+                <VideoCallMock />
+              </AuthenticatedShell>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AnimatePresence>
   );
 }
+
 
 function App() {
   return (

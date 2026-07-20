@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PostComposer from '../components/feed/PostComposer';
 import PostCard from '../components/feed/PostCard';
-import { api } from '../lib/api';
+import { api, BASE } from '../lib/api';
 import StoryBar from '../components/stories/StoryBar';
 import StoryViewer from '../components/stories/StoryViewer';
 import StoryComposer from '../components/stories/StoryComposer';
@@ -49,7 +49,7 @@ const FeedPage = () => {
         }
 
         const token = localStorage.getItem('session_token');
-        const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
         
         const res = await fetch(`${BASE}/api/posts`, {
           method: 'POST',

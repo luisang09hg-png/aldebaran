@@ -1,17 +1,59 @@
 .hero {
-  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-accent) 100%);
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, #1e1035 100%);
   color: var(--color-white);
   padding: 160px 0 100px;
   overflow: hidden;
   position: relative;
 }
 
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 50%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(134,59,255,0.35) 0%, transparent 70%);
+  filter: blur(80px);
+  z-index: 0;
+  pointer-events: none;
+  animation: float-blob-1 12s infinite alternate ease-in-out;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  right: -10%;
+  width: 60%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(71,191,255,0.25) 0%, transparent 70%);
+  filter: blur(90px);
+  z-index: 0;
+  pointer-events: none;
+  animation: float-blob-2 15s infinite alternate ease-in-out;
+}
+
+@keyframes float-blob-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(50px, 40px) scale(1.15); }
+}
+
+@keyframes float-blob-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-60px, -30px) scale(1.08); }
+}
+
+
 .hero-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 64px;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
+
 
 .hero h1 {
   font-size: 4rem;

@@ -2,7 +2,15 @@
  * api.js — Cliente HTTP centralizado para llamadas a la API.
  * Adjunta el token de sesión automáticamente desde localStorage.
  */
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const isProd = import.meta.env.PROD;
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
+if (isProd && !VITE_API_URL) {
+  console.error("CRITICAL ERROR: VITE_API_URL is not defined in production!");
+}
+
+export const BASE = VITE_API_URL || 'http://localhost:3000';
+
 
 async function request(method, path, body) {
   const token = localStorage.getItem('session_token');

@@ -28,11 +28,17 @@ const AuthPage = () => {
       }
       navigate('/dashboard');
     } catch (err) {
-      const message = err?.data?.message || err?.message || 'No se pudo completar la solicitud.';
-      setError(message);
+      if (err?.data?.errors && Array.isArray(err.data.errors)) {
+        const message = err.data.errors.map(e => `${e.path.join(' ')}: ${e.message}`).join(' | ');
+        setError(message);
+      } else {
+        const message = err?.data?.message || err?.message || 'No se pudo completar la solicitud.';
+        setError(message);
+      }
     } finally {
       setIsSubmitting(false);
     }
+
   };
 
   return (

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+import { BASE as API_URL } from './api';
 
 const getHeaders = () => {
   const token = localStorage.getItem('session_token');
