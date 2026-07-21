@@ -1,1 +1,77 @@
-node_modules
+# .gitignore
+
+# Node.js
+node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Database files
+*.db
+*.db-journal
+
+# Build artifacts
+.DS_Store
+dist/
+build/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials and secrets
+*.key
+*.pem
+
+# Test coverage
+coverage/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Database files
+*.db
+*.db-journal
+
+# Build artifacts
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Testing
+junit.xml
+test-results.xml
