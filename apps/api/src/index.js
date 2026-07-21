@@ -16,6 +16,14 @@ const { startStoryCleanupJob } = require('./jobs/cleanupStories.job');
 const app = express();
 const requestedPort = Number(process.env.PORT) || 3000;
 
+// Require FRONTEND_URL in production
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.FRONTEND_URL) {
+    console.error('FATAL: FRONTEND_URL must be set in production');
+    process.exit(1);
+  }
+}
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -27,7 +35,9 @@ const authLimiter = rateLimit({
 // ── Middlewares globales ──────────────────────────────────────────────────────
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.NODE_ENV === 'production' 
+    ? [process.env.FRONTEND_URL]
+    : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true,
 }));
 app.use(express.json({ limit: '2mb' }));

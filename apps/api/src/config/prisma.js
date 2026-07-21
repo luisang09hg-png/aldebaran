@@ -10,6 +10,9 @@ const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    // Connection pool for Vercel serverless
+    maxConnections: 10,
+    connectionLimit: 10,
   });
 
 if (process.env.NODE_ENV !== 'production') {

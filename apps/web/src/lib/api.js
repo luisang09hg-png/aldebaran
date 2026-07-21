@@ -23,8 +23,22 @@ async function request(method, path, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  const data = await res.json();
-  if (!res.ok) throw Object.assign(new Error(data.error || 'Error de red'), { status: res.status, data });
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    data = { message: 'Respuesta inválida del servidor' };
+  }
+
+  // FIXED: Handle both data.error and data.message for error messages
+  if (!res.ok) {
+    const errorMessage = data.message || data.error || 'Error desconocido';
+    const error = new Error(errorMessage);
+    error.status = res.status;
+    error.response = data;
+    throw error;
+  }
+
   return data;
 }
 
